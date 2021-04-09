@@ -1,5 +1,5 @@
 ;-------------------------------------------------------------------------------
-; KEYS2.ASM
+; keys.asm
 ;
 ; Check the status of all 4 arrow keys.
 ; Display a message for each key that is pressed.
@@ -12,7 +12,7 @@
 ; NOTE: This program won't work if you keyboard is mapped as the joystick in Vcc.
 ;-------------------------------------------------------------------------------
 
-PIA0RowRegister		EQU	$FF00
+	include constants.asm
 
 	ORG	$4000
 

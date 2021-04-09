@@ -1,18 +1,4 @@
-; Use a hi-res graphics mode to render the 16-color palette.
-
-
-; Other Constants
-
-VDGPort		EQU $FF22									; I/O port for control bits for VDG
-Pmode1VDG	EQU %11001000								; Upper 5 bits sets the VDG to pmode 1.
-Pmode4VDG	EQU %11111000								; Upper 5 bits sets the VDG to pmode 4
-
-SAMvregs	EQU $FFC0           						; SAM's V-mode registers (3-Bits)
-SAMvregsBC	EQU 3										; Number of bits for V-mode
-SAMpmode1	EQU %100									; Graphics Pmode1 for setting the V1, V2 & V3
-SAMpmode4	EQU %110									; Graphics Pmode4 for setting the V1,V2 & V3
-SAMmemLoc	EQU $FFC6									; Sam's Video Address registers (7-Bits)
-SAMmemLocBC	EQU 7										; Number of bits for V-address
+; Graphics routines targeting 256x192 16-color mode for use in other programs.
 
 ScreenWidth		EQU 256
 PixelsPerByte	EQU 2
@@ -21,17 +7,7 @@ ScreenHeight	EQU 192
 
 ScreenStart		EQU $6000
 ScreenCenter	EQU ScreenStart+ScreenByteWidth*ScreenHeight/2+ScreenByteWidth/2
-ScreenEnd		EQU ScreenStart+ScreenByteWidth*(ScreenHeight-2)+(ScreenByteWidth-1)
-
-PIA0RowRegister	EQU $FF00
-IRQ_ACK			EQU $FF02								; Acknowledge the VSYNC interrupt.
-IRQ_VSYNC		EQU $FF03								; VSYNC: Bit 7 is low when this IRQ triggered.
-
-		ORG	$0E00
-
-Palette:
-		FCB 0,1,2,3,4,5,6,56,7,15,23,31,39,47,55,63
-
+ScreenEnd		EQU ScreenStart+ScreenByteWidth*(ScreenHeight-1)+(ScreenByteWidth-1)
 
 ;-------------------------------------------------------------------------------
 ; Subroutine:	EnableVSync
@@ -43,11 +19,15 @@ EnableVSync:
 		STA		IRQ_VSYNC								; VSYNC is now enabled.
 		PULS	A,PC
 
+;-------------------------------------------------------------------------------
+; Subroutine:	EnableVSync
+; Summary:		Wait for VSync before continuing execution.
+; Remarks:		Clobbers the A register.
+;-------------------------------------------------------------------------------
 WaitVSync:
-		TST		IRQ_ACK									; Ackowledge the VSYNC interrupt.
-	@Loop:
-		TST		IRQ_VSYNC								; Loop until VSYNC is triggered.
-		BPL		@Loop
+		LDA		IRQ_VSYNC
+		BPL		WaitVSync
+		LDA		IRQ_ACK									; Acknowledge the interrupt.
 		PULS	PC
 
 ;-------------------------------------------------------------------------------
@@ -96,12 +76,17 @@ SetGraphicsMode:
 		STA		$ffa7
 		RTS
 
+;-------------------------------------------------------------------------------
+; Subroutine:	ClearScreen
+; Summary:		Clear the entire screen to color 0.
+; Remarks:		Clobbers the D and X registers.
+;-------------------------------------------------------------------------------
 ClearScreen:
 		LDD		#$0000
 		LDX		#ScreenStart
 	@Loop:
 		STD		,X++
-		CMPX	#$e000
+		CMPX	#ScreenEnd
 		BLO		@Loop
 		RTS
 
@@ -109,12 +94,13 @@ ClearScreen:
 ;* Set Pallete
 ;* X=address of 16 byte palette
 ;****************************************
+;-------------------------------------------------------------------------------
+; Subroutine:	BuildPalette
+; Summary:		Setup the palette colors.
+; Remarks:		Clobbers the D and U registers.
+;-------------------------------------------------------------------------------
 BuildPalette:
-		LDX		#Palette
-    @WaitVSync:
-		LDA		$FF03									; Wait for vsync
-		BPL		@WaitVSync								; so we don't get
-		LDA		$FF02									; sparklies	
+		JSR		WaitVSync
 		LDU		#$FFB0									; Start with palette index 0.
 	@Loop:
 		LDD		,X++									; Update 2 colors at a time.
@@ -122,32 +108,3 @@ BuildPalette:
 		CMPU	#$FFC0
 		BLO		@Loop
 		RTS
-
-Start:
-	; Disable interrupts.  Not sure yet why it's needed, but it is.
-		ORCC	#$50
-	; This sets the stack pointer.  You gotta do this if your program start is inside the existing stack.
-		LDS		#$5FF
-
-		JSR		EnableVSync	
-		JSR		SetGraphicsMode
-		JSR		ClearScreen
-		JSR		BuildPalette
-
-		LDX		#ScreenStart
-	@BarLoop:
-		LDD		#$0000
-	@ColorLoop:
-		STD		,X++
-		STD		,X++
-		STD		,X++
-		STD		,X++
-		ADDD	#$1111
-		BCC		@ColorLoop
-		CMPX	#ScreenEnd
-		BLO		@BarLoop
-		
-Loop:
-		JSR	WaitVSync
-		BRA	Loop
-		END Start

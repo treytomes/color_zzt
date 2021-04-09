@@ -36,11 +36,11 @@ WriteByteBin:
 ;	X:	The address to write the digit at.
 ;--------------------------------------------------------------------------------
 WriteByteHex:
-	pshs	X
-	bsr		WriteNibbleHigh
-	leax	1,X											; Move over for the next digit.
-	bsr		WriteNibbleLow
-	puls	X,PC
+		pshs	X
+		bsr		WriteNibbleHigh
+		leax	1,X										; Move over for the next digit.
+		bsr		WriteNibbleLow
+		puls	X,PC
 
 ;--------------------------------------------------------------------------------
 ; Subroutine:	WriteNibbleHigh
@@ -50,13 +50,13 @@ WriteByteHex:
 ;	X:	The address to write the digit at.
 ;--------------------------------------------------------------------------------
 WriteNibbleHigh:
-	pshs	A
-	lsra												; Move the high nibble into the low nibble.
-	lsra
-	lsra
-	lsra
-	bsr		WriteNibbleLow								; Write the high nibble.
-	puls	A,PC
+		pshs	A
+		lsra											; Move the high nibble into the low nibble.
+		lsra
+		lsra
+		lsra
+		bsr		WriteNibbleLow							; Write the high nibble.
+		puls	A,PC
 
 ;--------------------------------------------------------------------------------
 ; Subroutine:	WriteNibbleLow
@@ -89,8 +89,8 @@ WriteByteDec:
 		pshs	D,Y,X
 		ldy		#0										; Y counts the number of base-10 digits.
 	@ResetLoop:
-		; Perform base-10 division by subtracting over and over again.
-		; The quotient is collected in B; the remainder will be A+10 just after the loop.
+	; Perform base-10 division by subtracting over and over again.
+	; The quotient is collected in B; the remainder will be A+10 just after the loop.
 		clrb											; Reset the quotient counter.
     @Mod10Loop:
 		incb
