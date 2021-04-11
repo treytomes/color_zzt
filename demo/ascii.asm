@@ -1,10 +1,10 @@
 ; Use a hi-res graphics mode to render the Extended ASCII character set.
 
-	include constants.asm
+	include include\constants.asm
 
 		ORG	$0E00
 
-	include graphics.asm
+	include include\graphics.asm
 
 Palette:
 		FCB 0,1,2,3,4,5,6,56,7,15,23,31,39,47,55,63

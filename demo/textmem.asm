@@ -3,7 +3,7 @@
 	pragma m80ext				; Enable the byte literals in FCC.
 
 
-	include constants.asm
+	include include\constants.asm
 
 ;
 ; Miscellaneous Constants

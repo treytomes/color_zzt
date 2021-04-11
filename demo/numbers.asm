@@ -1,6 +1,6 @@
 ; Write some numbers to the low-res text screen.
 
-	include constants.asm
+	include include\constants.asm
 
 		org		$4000
 

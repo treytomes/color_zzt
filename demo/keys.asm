@@ -12,7 +12,7 @@
 ; NOTE: This program won't work if you keyboard is mapped as the joystick in Vcc.
 ;-------------------------------------------------------------------------------
 
-	include constants.asm
+	include include\constants.asm
 
 	ORG	$4000
 
