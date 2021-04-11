@@ -54,7 +54,6 @@ SetColor:
 ; Subroutine:	DrawChar
 ; Parameters:
 ;	A:	The character index to draw.
-;	B:	The color attribute.  High nibble is background, low nibble is foreground.
 ;	X:	Row/column. (TODO)
 ;-------------------------------------------------------------------------------
 DrawChar:
