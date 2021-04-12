@@ -30,10 +30,10 @@ Start:
 		JSR		SetColor
 		LDX		#ScreenStart
 		LDA		#0										; The character to draw.
-		LDY		#24										; 24 text rows.
+		LDY		#TextRows								; 24 text rows.
 	@RenderRowsLoop:
 		PSHS	Y
-		LDY		#32										; 32 text columns.
+		LDY		#TextColumns							; 32 text columns.
 	@RenderLoop:
 		JSR		DrawChar
 		INCA

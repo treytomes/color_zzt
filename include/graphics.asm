@@ -15,6 +15,8 @@ Palette:
 CharWidth		EQU	8
 CharHeight		EQU	8
 BytesPerChar	EQU	CharHeight
+TextRows		EQU 24
+TextColumns		EQU 32
 
 ASCII:
 	INCLUDEBIN OEM437.bin
