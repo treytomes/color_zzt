@@ -12,3 +12,5 @@ under the sun.  I have gained a lot from the work of others; maybe you will gain
 I'm using this batch file to assembly and run programs using the Vcc emulator.  You'll need to set the variables at the top of this file to point to your own copies of lwasm and vcc.
 
 The batch file takes 1 parameter:  The name of the file to be assembled, minus the extension.
+
+You will want to run this batch file from the root of the project, e.g. "exec demo\ascii" to run the ASCII demo.
