@@ -6,10 +6,6 @@
 
 	include include\graphics.asm
 
-Palette:
-		FCB 0,1,2,3,4,5,6,56,7,15,23,31,39,47,55,63
-
-
 Start:
 	; Disable interrupts.  Not sure yet why it's needed, but it is.
 		ORCC	#%01010000
