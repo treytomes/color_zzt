@@ -107,7 +107,7 @@ Start:
 		LDS		#$5FF
 
     ; High speed!
-		CLRA
+		;CLRA											; Clearing A is not necessary?
 		STA		$FFD9
 		STA		$FFD7
 
