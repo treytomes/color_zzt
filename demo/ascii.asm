@@ -1,10 +1,10 @@
 ; Use a hi-res graphics mode to render the Extended ASCII character set.
 
-	include include\constants.asm
+	INCLUDE		include\constants.asm
 
-		ORG	$0E00
+		ORG		$0E00
 
-	include include\graphics.asm
+	INCLUDE		include\graphics.asm
 
 Start:
 	; Disable interrupts.  Not sure yet why it's needed, but it is.
