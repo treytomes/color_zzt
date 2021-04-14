@@ -2,3 +2,4 @@
 *.lst
 
 !OEM437.bin
+!screen.bin

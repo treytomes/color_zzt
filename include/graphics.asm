@@ -21,6 +21,8 @@ TextColumns		EQU 32
 ASCII:
 	INCLUDEBIN OEM437.bin
 
+TextAttribute:
+		RMB		1										; Save the current attribute so we only change if necessary.
 TextBackground:
 		RMB		1										; Background color should have the same number in the high and low nibbles.
 TextForegroundHigh:
@@ -133,6 +135,10 @@ BuildPalette:
 ;	B:	The color attribute.  High nibble is background, low nibble is foreground.
 ;-------------------------------------------------------------------------------
 SetColor:
+		CMPB	TextAttribute
+		BNE		@Continue
+		RTS
+	@Continue:
 		PSHS	D
 	; Calculate the 3 color variables from B.
 		TFR		B,A										; A=B

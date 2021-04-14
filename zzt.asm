@@ -6,6 +6,9 @@
 
 	INCLUDE		include\graphics.asm
 
+ScreenData:
+	INCLUDEBIN	screen.bin
+
 DrawChart:
 		LDB		#$0F									; The color attribute.
 		JSR		SetColor
@@ -85,13 +88,34 @@ Start:
 		JSR		BuildPalette
 
 		;JSR		DrawChart
-		JSR		DrawBox
+		;JSR		DrawBox
 
-		LDB		#$1F
+		;LDB		#$1F
+		;JSR		SetColor
+		;LDA		#2
+		;LDX		#(ScreenStart+ScreenByteWidth*CharHeight*8+CharWidth/PixelsPerByte*4)
+		;JSR		DrawChar
+
+		LDY		#ScreenData
+		LDX		#ScreenStart
+		LDB		#TextRows								; 24 text rows.
+	@RenderRowsLoop:
+		PSHS	B
+		LDB		#TextColumns							; 32 text columns.
+	@RenderLoop:
+		PSHS	B
+		LDD		,Y++
 		JSR		SetColor
-		LDA		#2
-		LDX		#(ScreenStart+ScreenByteWidth*CharHeight*8+CharWidth/PixelsPerByte*4)
 		JSR		DrawChar
+		LEAX	(CharWidth/PixelsPerByte),X
+		PULS	B
+		DECB
+		BNE		@RenderLoop
+		LEAX	((CharHeight-1)*ScreenByteWidth),X
+		PULS	B
+		DECB
+		BNE		@RenderRowsLoop
+
 
 Loop:
 		BRA		Loop
