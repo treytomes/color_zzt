@@ -163,7 +163,7 @@ SetColor:
 ; Subroutine:	DrawChar
 ; Parameters:
 ;	A:	The character index to draw.
-;	X:	Row/column. (TODO)
+;	X:	Row/column. (TODO)  Actually just the screen position.
 ;-------------------------------------------------------------------------------
 DrawChar:
 		PSHS	D,X,Y
